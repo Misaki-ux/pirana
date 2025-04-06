@@ -16,20 +16,20 @@ import (
 )
 
 // --- ASCII Art Banners ---
-const piranaText = `   ___  _
-  / _ \(_)______ ____  ___ _
- / ___/ / __/ _ `/ _ \/ _ `/
-/_/  /_/_/  \_,_/_//_/\_,_/
-                            `
-const piranaArt = `          ,---,
-  _    _,-'    `--,
- ( `-,'            `\
-  \           ,    o \
-  /   ,       ;       \
- (_,-' \       `, _  ""/
-     pb `-,___ =='__,-'
-              ````
-`
+const piranaText = "   ___  _\n" +
+	"  / _ \\(_)______ ____  ___ _\n" + // Corrected the line again just in case
+	" / ___/ / __/ _ `/ _ \\/ _ `/\n" +
+	"/_/  /_/_/  \\_,_/_//_/\\_,_/\n" +
+	"                            " // No \n needed on the last line if it's just spaces
+
+const piranaArt = "          ,---,\n" +
+	"  _    _,-'    `--,\n" +
+	" ( `-,'            `\\\n" + // Escaped backslash -> \\
+	"  \\           ,    o \\\n" + // Escaped backslash -> \\
+	"  /   ,       ;       \\\n" + // Escaped backslash -> \\
+	" (_,-' \\       `, _  \"\"/\n" + // Escaped backslash -> \\, Escaped quotes -> \"\"
+	"     pb `-,___ =='__,-'\n" +
+	"              ````\n" // Added \n here for consistency, though maybe not strictly needed visually
 // --- Configuration Constants ---
 const (
 	defaultUserAgent = "PiranaScanner/1.0 (+https://github.com/Misaki-ux/pirana.git)" // Mettez votre lien repo
