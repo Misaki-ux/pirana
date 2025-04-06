@@ -17,11 +17,10 @@ import (
 
 // --- ASCII Art Banners ---
 const piranaText = `   ___  _
-  / _ \7_)______ ____  ___ _
+  / _ \(_)______ ____  ___ _
  / ___/ / __/ _ `/ _ \/ _ `/
 /_/  /_/_/  \_,_/_//_/\_,_/
                             `
-
 const piranaArt = `          ,---,
   _    _,-'    `--,
  ( `-,'            `\
@@ -31,7 +30,6 @@ const piranaArt = `          ,---,
      pb `-,___ =='__,-'
               ````
 `
-
 // --- Configuration Constants ---
 const (
 	defaultUserAgent = "PiranaScanner/1.0 (+https://github.com/Misaki-ux/pirana.git)" // Mettez votre lien repo
