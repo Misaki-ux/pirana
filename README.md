@@ -1,6 +1,7 @@
 
 ---
-![image](https://github.com/user-attachments/assets/2c619d80-11d6-4db0-a9f5-0457456f222a)
+![image](https://github.com/user-attachments/assets/d88acc92-5744-4e08-bf0b-2783a00df050)
+
 
 Pirana is a Go-based tool designed to automate parts of the web reconnaissance workflow, focusing on subdomain enumeration, live host checking, extensive endpoint discovery, and preparing targets for XSS vulnerability scanning with Dalfox. It orchestrates several popular open-source tools to streamline the process.
 
