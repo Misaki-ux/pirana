@@ -47,7 +47,7 @@ Pirana orchestrates several external tools. You **MUST** install them and ensure
 *   **dalfox:** `go install -v github.com/hahwul/dalfox/v2@latest`
 *   **nuclei** `go install -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@latest`
 *   **fuff** `go install -v github.com/ffuf/ffuf@latest`
-*   
+  
 Verify each tool is installed and accessible by running commands like `subfinder -h`, `httpx -h`, etc., in your terminal.
 
 ## Installation
@@ -64,42 +64,105 @@ Verify each tool is installed and accessible by running commands like `subfinder
     ```bash
     sudo mv pirana /usr/local/bin/
     ```
+## Options / Options
 
+*   `-d <domain>`:
+    *   Specify a single target domain (e.g., `example.com`).
+
+*   `-l <domain_list_file>`:
+    *   Specify a file containing a list of target domains (one per line).
+
+*   `-u <url_list_file>`:
+    *   Specify a file containing a list of URLs to scan directly. Often used with `--skip-discovery`.
+
+*   `-ef <exclude_file>`:
+    *   Specify a file containing patterns (domains/subdomains) to exclude from the scan (one pattern per line, e.g., `*.internal.com`). See [Exclusion File Format](#exclusion-file-format).
+
+*   `-t <threads>`:
+    *   Number of concurrent threads/goroutines for tools that support it.
+    *   Default: `10`.
+
+*   `-ua <user_agent>`:
+    *   Custom User-Agent string for HTTP requests made by integrated tools (where supported).
+    *   Default: `PiranaScanner/1.0 (+https://github.com/Misaki-ux/pirana)` (Replace with your actual link if hosted).
+
+*   `--skip-discovery`:
+    *   Skip the initial Subdomain Enumeration, Live Host Checking, and Endpoint Discovery phases.
+    *   Requires `-u` (URL list) to be provided as input for subsequent steps (like Nuclei, FFUF, Dalfox).
+
+*   `--skip-nuclei`:
+    *   Skip the Nuclei vulnerability scanning phase.
+    *   Default: Nuclei scan is run.
+
+*   `--skip-xss`:
+    *   Skip the final Dalfox XSS scanning phase.
+    *   Default: Dalfox scan is run if parameterized URLs are found.
+
+*   `--ffuf`:
+    *   Enable directory and file fuzzing using FFUF against live hosts.
+    *   Requires the `-w` flag to specify a wordlist path.
+    *   Default: FFUF fuzzing is skipped.
+
+*   `-w <wordlist_path>`:
+    *   Specifies the path to the wordlist file required by FFUF.
+    *   Only used if `--ffuf` is enabled.
+
+*   `-o <prefix>`:
+    *   Specify a custom prefix for all output files within the `pirana_output` directory.
+    *   Default: Prefix is automatically generated based on the input domain or list filename (e.g., `example_com`, `domains_list`).
+
+*   `-v`:
+    *   Enable verbose output mode. Shows the exact commands being executed by Pirana, provides more detailed logging, and prevents the deletion of temporary files (`.tmp`) upon completion for debugging purposes.
+    *   Default: Verbose mode is disabled (output is cleaner).
+      
 ## Usage
 
 ```bash
 ./pirana [options]
 
 ## Detailed
-
 ## Usage Examples / Exemples d'Utilisation
 
-1.  **English:** Scan a single domain with 15 threads and a specific User-Agent.
-    **Français:** Scanner un seul domaine avec 15 threads et un User-Agent spécifique.
+1.  **English:** Run a standard scan (Subdomain, Live Hosts, Endpoint Discovery, Nuclei, Dalfox).
+    **Français:** Lancer un scan standard (Sous-domaines, Hôtes Actifs, Découverte Endpoints, Nuclei, Dalfox).
     ```bash
-    ./pirana -d example.com -t 15 -ua "MyCustomScanner/1.1"
+    ./pirana -d example.com
     ```
 
-2.  **English:** Scan a list of domains from a file using 20 threads.
-    **Français:** Scanner une liste de domaines depuis un fichier avec 20 threads.
+2.  **English:** Scan a single domain, but skip the Nuclei vulnerability scan.
+    **Français:** Scanner un seul domaine, mais sauter le scan de vulnérabilités Nuclei.
     ```bash
-    ./pirana -l domains.txt -t 20
+    ./pirana -d example.com --skip-nuclei
     ```
 
-3.  **English:** Scan a list of URLs directly for XSS (skipping discovery) using 10 threads.
-    **Français:** Scanner directement une liste d'URLs pour XSS (en sautant la découverte) avec 10 threads.
+3.  **English:** Scan a single domain and run FFUF directory fuzzing using a specific wordlist. (Nuclei also runs by default).
+    **Français:** Scanner un seul domaine et lancer le fuzzing de répertoires FFUF avec une wordlist spécifique. (Nuclei est aussi lancé par défaut).
     ```bash
-    ./pirana -u urls_to_scan.txt -skip-discovery -t 10
+    ./pirana -d example.com --ffuf -w /path/to/your/wordlist.txt
+    ```
+    *(**Note:** Replace `/path/to/your/wordlist.txt` with the actual path to your wordlist)*
+
+4.  **English:** Scan a list of domains with higher concurrency, exclusions, run FFUF, but skip the final Dalfox XSS scan.
+    **Français:** Scanner une liste de domaines avec une concurrence accrue, des exclusions, lancer FFUF, mais sauter le scan XSS final Dalfox.
+    ```bash
+    ./pirana -l domains.txt -ef scope_exclusions.txt -t 25 --ffuf -w /usr/share/seclists/Discovery/Web-Content/common.txt --skip-xss
+    ```
+    *(**Note:** Example uses a common SecLists path, adjust as needed)*
+
+5.  **English:** Scan a list of URLs directly (skip discovery), run Nuclei and FFUF on them.
+    **Français:** Scanner directement une liste d'URLs (sauter la découverte), lancer Nuclei et FFUF dessus.
+    ```bash
+    ./pirana -u urls_to_scan.txt --skip-discovery --ffuf -w /path/to/your/wordlist.txt
     ```
 
-4.  **English:** Scan a domain but skip the final XSS scan.
-    **Français:** Scanner un domaine mais sauter le scan XSS final.
+6.  **English:** Scan a single domain, skip Nuclei, skip Dalfox, but run FFUF.
+    **Français:** Scanner un seul domaine, sauter Nuclei, sauter Dalfox, mais lancer FFUF.
     ```bash
-    ./pirana -d example.com -skip-xss
+    ./pirana -d example.com --skip-nuclei --skip-xss --ffuf -w /path/to/your/wordlist.txt
     ```
 
-5.  **English:** Specify a prefix for the output files.
-    **Français:** Spécifier un préfixe pour les fichiers de sortie.
+7.  **English:** Scan a single domain with verbose output (shows commands, keeps temp files).
+    **Français:** Scanner un seul domaine avec une sortie verbeuse (montre les commandes, conserve les fichiers temporaires).
     ```bash
-    ./pirana -d example.com -o my_scan_example
+    ./pirana -d example.com -v
     ```
