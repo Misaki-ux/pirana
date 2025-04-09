@@ -44,6 +44,7 @@ Pirana orchestrates several external tools. You **MUST** install them and ensure
 *   **waybackurls:** `go install -v github.com/tomnomnom/waybackurls@latest`
 *   **gau:** `go install -v github.com/lc/gau/v2/cmd/gau@latest`
 *   **paramspider:** `pip3 install paramspider` (or `pip`) - *Note: Python dependency*
+    (link to install `git clone https://github.com/0xKayala/ParamSpider`
 *   **dalfox:** `go install -v github.com/hahwul/dalfox/v2@latest`
 *   **nuclei** `go install -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@latest`
 *   **fuff** `go install -v github.com/ffuf/ffuf@latest`
